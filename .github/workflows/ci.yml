@@ -1,25 +1,22 @@
-name: GitHub Actions Build and Deploy Demo
-on:
-  push:
-    branches:
-      - master
+name: CI
+on: [push, pull_request]
 jobs:
-  build-and-deploy:
+  test_and_build:
     runs-on: ubuntu-latest
     steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Install and Build
+    - uses: actions/checkout@v3
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with: python-version: '3.10'
+    - name: Install deps
       run: |
-        npm install
-        npm run-script build
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
+        python -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+    - name: Run tests
+      run: |
+        source venv/bin/activate
+        pytest
+    - name: Build Docker image
+      run: |
+        docker build -t tennis-predictor:${{ github.sha }} .
