@@ -1,5 +1,40 @@
-This repo is a GitHub Actions demo of publishing a React App into GitHub Pages.
+# Tennis Match Outcome Predictor
 
-View the [workflow file](./.github/workflows/ci.yml) and the [published website](https://ruanyf.github.io/github-actions-demo).
+**Нейросеть** для предсказания результата теннисных матчей на основе:
+- **Rank_1**, **Rank_2**, **Rank_diff** — рейтинги игроков  
+- **WinRate_1**, **WinRate_2** — доля выигранных сетов  
+- **Surface** — покрытие (Clay, Grass, Hard, Indoor)  
+- **Series** — категория турнира (ATP250, ATP500, ATP1000 и т.д.)
 
-Read the details in [my blog](http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html) (in Chinese).
+---
+
+## Структура проекта
+
+C:.
+├── data/ # Сырые (.csv) и предобработанные данные
+├── logs/ # Логи обучения (TensorBoard, CSV, JSON)
+├── models/ # Итоговая модель и препроцессор
+├── src/ # Исходный код
+│ ├── init.py # пакет
+│ ├── app.py # Flask API для предсказаний
+│ ├── config.py # Параметры и пути
+│ ├── data_loader.py # Загрузка и предобработка данных
+│ ├── cross_validation.py# K-Fold валидация
+│ ├── main.py # Запуск полного пайплайна
+│ ├── model.py # Определение нейросети
+│ ├── preprocessor.py # Класс DataPreprocessor
+│ └── trainer.py # Класс Trainer (обучение модели)
+├── test_preprocessing.py # Тесты для preprocess_data
+├── test_trainer.py # Smoke-тест для Trainer
+├── test_api.py # Тест API (пропускается, если сервер не запущен)
+├── requirements.txt # Зависимости проекта
+└── README.md # Документация (этот файл)
+
+---
+
+## Установка
+
+1. **Клонировать репозиторий** (замените `<repo_url>` на ваш URL):
+   ```bash
+   git clone <repo_url>
+   cd C:\neeron
